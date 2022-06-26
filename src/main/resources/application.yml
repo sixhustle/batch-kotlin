@@ -1,0 +1,14 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: local
+  datasource:
+    url: jdbc:mysql://127.0.0.1:13306/batch?autoReconnect=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    username: batch
+    password: batch
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  batch:
+    jdbc:
+      initialize-schema: ALWAYS
