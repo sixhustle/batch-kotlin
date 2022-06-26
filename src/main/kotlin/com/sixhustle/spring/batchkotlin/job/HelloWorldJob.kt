@@ -1,6 +1,7 @@
 package com.sixhustle.spring.batchkotlin.job
 
 import com.sixhustle.spring.batchkotlin.tasklet.HelloWorldTasklet
+import com.sixhustle.spring.batchkotlin.validator.ParameterValidator
 import mu.KotlinLogging
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.JobParametersValidator
@@ -8,6 +9,7 @@ import org.springframework.batch.core.Step
 import org.springframework.batch.core.StepContribution
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory
+import org.springframework.batch.core.job.CompositeJobParametersValidator
 import org.springframework.batch.core.job.DefaultJobParametersValidator
 import org.springframework.batch.core.scope.context.ChunkContext
 import org.springframework.batch.core.scope.context.StepContext
@@ -28,7 +30,7 @@ class HelloWorldJob(
     fun job(): Job {
         return jobBuilderFactory["basicJob"]
                 .start(step1())
-                .validator(validator())
+                .validator(compositeValidator())
                 .build()
     }
 
@@ -46,4 +48,19 @@ class HelloWorldJob(
         validator.setOptionalKeys(arrayOf("name"))
         return validator
     }
+
+    @Bean
+    fun compositeValidator(): CompositeJobParametersValidator {
+        val defaultValidator = DefaultJobParametersValidator(
+                arrayOf("fileName"),
+                arrayOf("name")
+        )
+        defaultValidator.afterPropertiesSet()
+
+        val validator = CompositeJobParametersValidator()
+        validator.setValidators(arrayListOf(ParameterValidator(), defaultValidator))
+        return validator;
+    }
+
+
 }

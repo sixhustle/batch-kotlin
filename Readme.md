@@ -6,6 +6,11 @@
 ---
 
 # 메모
+
+## Kotlin
+- `?` nullable
+- `!!` non-null : null인 경우 throw error
+## Batch
 - validator는 대/소문자 구분을 한다.
 
 ---
