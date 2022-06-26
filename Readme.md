@@ -5,6 +5,11 @@
 
 ---
 
+# 메모
+- validator는 대/소문자 구분을 한다.
+
+---
+
 # 겪었던 오류들
 - 에러: Table 'batch.BATCH_JOB_INSTANCE' doesn't exist  
 - 원인: Spring Boot 2.5 부터 yml 경로가 변경됨  

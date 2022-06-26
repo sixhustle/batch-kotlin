@@ -3,10 +3,12 @@ package com.sixhustle.spring.batchkotlin.job
 import com.sixhustle.spring.batchkotlin.tasklet.HelloWorldTasklet
 import mu.KotlinLogging
 import org.springframework.batch.core.Job
+import org.springframework.batch.core.JobParametersValidator
 import org.springframework.batch.core.Step
 import org.springframework.batch.core.StepContribution
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory
+import org.springframework.batch.core.job.DefaultJobParametersValidator
 import org.springframework.batch.core.scope.context.ChunkContext
 import org.springframework.batch.core.scope.context.StepContext
 import org.springframework.batch.core.step.tasklet.Tasklet
@@ -25,25 +27,23 @@ class HelloWorldJob(
     @Bean
     fun job(): Job {
         return jobBuilderFactory["basicJob"]
-                .start(step2())
+                .start(step1())
+                .validator(validator())
                 .build()
     }
 
     @Bean
-    fun step(): Step {
+    fun step1(): Step {
         return stepBuilderFactory["step1"]
-                .tasklet { _: StepContribution, _: ChunkContext ->
-                    log.info { "Hello, World !" }
-                    RepeatStatus.FINISHED
-                }
+                .tasklet(HelloWorldTasklet())
                 .build()
     }
 
     @Bean
-    fun step2(): Step {
-        val helloWorldTasklet = HelloWorldTasklet()
-        return stepBuilderFactory["step2"]
-                .tasklet(helloWorldTasklet)
-                .build()
+    fun validator(): JobParametersValidator {
+        val validator = DefaultJobParametersValidator()
+        validator.setRequiredKeys(arrayOf("fileName"))
+        validator.setOptionalKeys(arrayOf("name"))
+        return validator
     }
 }
