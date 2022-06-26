@@ -11,6 +11,7 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory
 import org.springframework.batch.core.job.CompositeJobParametersValidator
 import org.springframework.batch.core.job.DefaultJobParametersValidator
+import org.springframework.batch.core.launch.support.RunIdIncrementer
 import org.springframework.batch.core.scope.context.ChunkContext
 import org.springframework.batch.core.scope.context.StepContext
 import org.springframework.batch.core.step.tasklet.Tasklet
@@ -31,6 +32,7 @@ class HelloWorldJob(
         return jobBuilderFactory["basicJob"]
                 .start(step1())
                 .validator(compositeValidator())
+                .incrementer(RunIdIncrementer())
                 .build()
     }
 
@@ -53,12 +55,14 @@ class HelloWorldJob(
     fun compositeValidator(): CompositeJobParametersValidator {
         val defaultValidator = DefaultJobParametersValidator(
                 arrayOf("fileName"),
-                arrayOf("name")
+                arrayOf("name", "run.id")
         )
+
         defaultValidator.afterPropertiesSet()
 
         val validator = CompositeJobParametersValidator()
         validator.setValidators(arrayListOf(ParameterValidator(), defaultValidator))
+
         return validator;
     }
 
