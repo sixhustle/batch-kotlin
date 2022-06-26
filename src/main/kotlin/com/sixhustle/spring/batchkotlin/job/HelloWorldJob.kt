@@ -1,5 +1,6 @@
 package com.sixhustle.spring.batchkotlin.job
 
+import com.sixhustle.spring.batchkotlin.incrementer.DailyJobTimeStamper
 import com.sixhustle.spring.batchkotlin.tasklet.HelloWorldTasklet
 import com.sixhustle.spring.batchkotlin.validator.ParameterValidator
 import mu.KotlinLogging
@@ -32,7 +33,7 @@ class HelloWorldJob(
         return jobBuilderFactory["basicJob"]
                 .start(step1())
                 .validator(compositeValidator())
-                .incrementer(RunIdIncrementer())
+                .incrementer(DailyJobTimeStamper())
                 .build()
     }
 
@@ -44,18 +45,10 @@ class HelloWorldJob(
     }
 
     @Bean
-    fun validator(): JobParametersValidator {
-        val validator = DefaultJobParametersValidator()
-        validator.setRequiredKeys(arrayOf("fileName"))
-        validator.setOptionalKeys(arrayOf("name"))
-        return validator
-    }
-
-    @Bean
     fun compositeValidator(): CompositeJobParametersValidator {
         val defaultValidator = DefaultJobParametersValidator(
                 arrayOf("fileName"),
-                arrayOf("name", "run.id")
+                arrayOf("name", "run.id", "currentDate")
         )
 
         defaultValidator.afterPropertiesSet()
