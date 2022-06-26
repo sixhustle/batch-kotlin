@@ -1,6 +1,7 @@
 package com.sixhustle.spring.batchkotlin.job
 
 import com.sixhustle.spring.batchkotlin.incrementer.DailyJobTimeStamper
+import com.sixhustle.spring.batchkotlin.listener.JobLoggerListener
 import com.sixhustle.spring.batchkotlin.tasklet.HelloWorldTasklet
 import com.sixhustle.spring.batchkotlin.validator.ParameterValidator
 import mu.KotlinLogging
@@ -34,6 +35,7 @@ class HelloWorldJob(
                 .start(step1())
                 .validator(compositeValidator())
                 .incrementer(DailyJobTimeStamper())
+                .listener(JobLoggerListener())
                 .build()
     }
 

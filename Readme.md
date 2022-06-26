@@ -8,10 +8,16 @@
 # 메모
 
 ## Kotlin
-- `?` nullable
-- `!!` non-null : null인 경우 throw error
+> `?` nullable
+
+>  `!!` non-null : null인 경우 throw error
+
+> kotlin에서 static은 없다. --> const val 변수명
+
+
 ## Batch
-- validator는 대/소문자 구분을 한다.
+
+> validator는 대/소문자 구분을 한다.
 
 ---
 
